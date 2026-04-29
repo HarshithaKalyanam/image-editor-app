@@ -33,9 +33,6 @@ text = st.sidebar.text_input("Add Text on Image")
 
 reset_btn = st.sidebar.button("🔄 Reset Image")
 
-apply_btn = st.sidebar.button("Apply Filters")
-
-
 uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
 
 # 👉 keep ALL sidebar controls ABOVE this
