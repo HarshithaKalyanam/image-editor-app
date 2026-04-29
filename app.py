@@ -57,9 +57,11 @@ cartoon_toggle = st.sidebar.checkbox("Cartoon Effect")
 
 if uploaded_file:
     image = Image.open(uploaded_file)
+    img = utils.pil_to_cv2(image)
+    
     if img.shape[1] > 800:
        scale = 800 / img.shape[1]
-       img = cv2.resize(img, None, fx=scale, fy=scale)    
+    img = cv2.resize(img, None, fx=scale, fy=scale)    
 
 
     # 🔄 Resize
