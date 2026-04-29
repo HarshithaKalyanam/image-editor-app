@@ -5,6 +5,21 @@ import filters
 import utils
 import io
 
+@st.cache_data
+def process_image(img, blur_val, sharp_val, brightness_val, contrast_val):
+    processed = img.copy()
+    
+    if blur_val > 1:
+        processed = filters.apply_blur(processed, blur_val)
+
+    if sharp_val > 0:
+        processed = filters.apply_sharpness(processed, sharp_val)
+
+    processed = filters.adjust_brightness(processed, brightness_val)
+    processed = filters.adjust_contrast(processed, contrast_val)
+
+    return processed
+
 
 st.set_page_config(page_title="Image Editor", page_icon="🖼️", layout="wide")
 
@@ -16,7 +31,7 @@ st.markdown("## 🎨 Advanced Image Editor using Streamlit + OpenCV")
 # Sidebar control
 st.sidebar.header("Controls")
 
-blur_val = st.sidebar.slider("Blur", 1, 51, 1, step=2)
+blur_val = st.sidebar.slider("Blur", 1, 21, 1, step=2)
 sharp_val = st.sidebar.slider("Sharpness", 0.0, 3.0, 0.0)
 brightness_val = st.sidebar.slider("Brightness", -100, 100, 0)
 contrast_val = st.sidebar.slider("Contrast", 0.5, 3.0, 1.0)
@@ -42,11 +57,15 @@ cartoon_toggle = st.sidebar.checkbox("Cartoon Effect")
 
 if uploaded_file:
     image = Image.open(uploaded_file)
-    img = utils.pil_to_cv2(image)
+if img.shape[1] > 800:
+    scale = 800 / img.shape[1]
+    img = cv2.resize(img, None, fx=scale, fy=scale)    
 
 
     # 🔄 Resize
     scale = resize_val / 100
+    if img.shape[1] > 800:
+    scale = 800 / img.shape[1]
     img = cv2.resize(img, None, fx=scale, fy=scale)
 
     # 🔄 Rotate
