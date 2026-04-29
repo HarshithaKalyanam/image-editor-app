@@ -65,8 +65,8 @@ if img.shape[1] > 800:
     # 🔄 Resize
     scale = resize_val / 100
     if img.shape[1] > 800:
-    scale = 800 / img.shape[1]
-    img = cv2.resize(img, None, fx=scale, fy=scale)
+       scale = 800 / img.shape[1]
+       img = cv2.resize(img, None, fx=scale, fy=scale)
 
     # 🔄 Rotate
     if rotate_val != 0:
