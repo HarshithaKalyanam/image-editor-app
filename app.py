@@ -16,7 +16,7 @@ def process_image(img, blur_val, sharp_val, brightness_val, contrast_val):
         processed = filters.apply_blur(processed, blur_val)
 
     if sharp_val > 0:
-        process ed = filters.apply_sharpness(processed, sharp_val)
+        processed = filters.apply_sharpness(processed, sharp_val)
 
     processed = filters.adjust_brightness(processed, brightness_val)
     processed = filters.adjust_contrast(processed, contrast_val)
