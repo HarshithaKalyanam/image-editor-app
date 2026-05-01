@@ -5,66 +5,6 @@ import filters
 import utils
 import io
 
-if "reset" not in st.session_state:
-    st.session_state.reset = False
-
-@st.cache_data
-def process_image(img, blur_val, sharp_val, brightness_val, contrast_val):
-    processed = img.copy()
-    
-    if blur_val > 1:
-        processed = filters.apply_blur(processed, blur_val)
-
-    if sharp_val > 0:
-        processed = filters.apply_sharpness(processed, sharp_val)
-
-    processed = filters.adjust_brightness(processed, brightness_val)
-    processed = filters.adjust_contrast(processed, contrast_val)
-
-    return processed
-
-
-st.set_page_config(page_title="Image Editor", page_icon="🖼️", layout="wide")
-
-st.title("🖼️ Image Editing App")
-st.markdown("### Upload an image and apply filters like blur, sharpness, edge detection, and more.")
-
-st.markdown("## 🎨 Advanced Image Editor using Streamlit + OpenCV")
-
-# Sidebar control
-st.sidebar.header("Controls")
-
-blur_val = st.sidebar.slider("Blur", 1, 21, 1, step=2)
-sharp_val = st.sidebar.slider("Sharpness", 0.0, 3.0, 0.0)
-brightness_val = st.sidebar.slider("Brightness", -100, 100, 0)
-contrast_val = st.sidebar.slider("Contrast", 0.5, 3.0, 1.0)
-
-edge_toggle = st.sidebar.checkbox("Edge Detection")
-t1 = st.sidebar.slider("Threshold 1", 0, 255, 100, disabled=not edge_toggle)
-t2 = st.sidebar.slider("Threshold 2", 0, 255, 200, disabled=not edge_toggle)
-
-gray_toggle = st.sidebar.checkbox("Grayscale")
-
-rotate_val = st.sidebar.slider("Rotate Image", -180, 180, 0)
-resize_val = st.sidebar.slider("Resize (%)", 10, 200, 100)
-text = st.sidebar.text_input("Add Text on Image")
-reset_btn = st.sidebar.button("🔄 Reset Image")
-
-
-uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
-
-# 👉 keep ALL sidebar controls ABOVE this
-flip_option = st.sidebar.selectbox("Flip", ["None", "Horizontal", "Vertical"])
-sepia_toggle = st.sidebar.checkbox("Sepia Filter")
-cartoon_toggle = st.sidebar.checkbox("Cartoon Effect")
-
-import streamlit as st
-from PIL import Image
-import cv2
-import filters
-import utils
-import io
-
 st.set_page_config(page_title="Image Editor", page_icon="🖼️", layout="wide")
 
 st.title("🖼️ Image Editing App")
