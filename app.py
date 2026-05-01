@@ -5,6 +5,9 @@ import filters
 import utils
 import io
 
+if "reset" not in st.session_state:
+    st.session_state.reset = False
+
 @st.cache_data
 def process_image(img, blur_val, sharp_val, brightness_val, contrast_val):
     processed = img.copy()
@@ -13,7 +16,7 @@ def process_image(img, blur_val, sharp_val, brightness_val, contrast_val):
         processed = filters.apply_blur(processed, blur_val)
 
     if sharp_val > 0:
-        processed = filters.apply_sharpness(processed, sharp_val)
+        process ed = filters.apply_sharpness(processed, sharp_val)
 
     processed = filters.adjust_brightness(processed, brightness_val)
     processed = filters.adjust_contrast(processed, contrast_val)
@@ -46,7 +49,8 @@ rotate_val = st.sidebar.slider("Rotate Image", -180, 180, 0)
 resize_val = st.sidebar.slider("Resize (%)", 10, 200, 100)
 text = st.sidebar.text_input("Add Text on Image")
 
-reset_btn = st.sidebar.button("🔄 Reset Image")
+if st.sidebar.button("🔄 Reset Image"):
+    st.session_state.reset = True
 
 uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
 
@@ -85,9 +89,38 @@ if uploaded_file:
 
     processed = img.copy()
 
-    # 🔄 Reset
-    if reset_btn:
-        processed = img.copy()
+    # 🔄 Reset (place BEFORE filters)
+if reset_btn:
+    processed = img.copy()
+else:
+    processed = img.copy()
+
+    # 🎨 Apply filters ONLY if not reset
+    if blur_val > 1:
+        processed = filters.apply_blur(processed, blur_val)
+
+    if sharp_val > 0:
+        processed = filters.apply_sharpness(processed, sharp_val)
+
+    processed = filters.adjust_brightness(processed, brightness_val)
+    processed = filters.adjust_contrast(processed, contrast_val)
+
+    if gray_toggle:
+        processed = filters.to_grayscale(processed)
+
+    if edge_toggle:
+        processed = filters.edge_detection(processed, t1, t2)
+
+    if sepia_toggle:
+        processed = filters.sepia(processed)
+
+    if cartoon_toggle:
+        processed = filters.cartoon(processed)
+
+    if text:
+        cv2.putText(processed, text, (50, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    (255, 255, 255), 2)
 
     # 🎨 Basic Filters
     if blur_val > 1:
